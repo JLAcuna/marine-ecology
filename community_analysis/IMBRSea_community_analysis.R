@@ -23,9 +23,7 @@ View(ekofisk.species)
 # is available at
 # https://www.mooreecology.com/uploads/2/4/2/1/24213970/vegantutor.pdf
 # this step is not necessary if you have vegan already installed:
-
-# install.packages("vegan") 
-
+install.packages("vegan") 
 
 # loads vegan in the current session:
 library(vegan) 
