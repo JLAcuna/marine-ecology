@@ -1,0 +1,102 @@
+---
+title: "Marine Ecology Data Assignment"
+author: "José Luis Acuña"
+date: "1/8/2021"
+output: html_document
+---
+
+```{r sets working directory}
+setwd("D:/OneDrive - Universidad de Oviedo/activo/20210901-Marine Ecology/marine_ecology_data_assignment")
+
+source("marecol_functions.R")
+
+# plots 2D NMDS  with sample labels and colors for
+# the cluster groups, such that. The arguments are: 
+#     nmd   is the NMDS
+#     clu   is the cluster
+#     bran  is the number of branches (an integer > 1)
+#     df    is the species dataframe
+
+plot.NMDS <- function(nmd, clu, bran, df)
+
+# shortens species names in file species.names.csv with first column as
+# "Chirodota laevis [%] (C. laevis) * PI: Molis"
+# Arguments are:
+#     n1:      number of characters for the short genus name
+#     n2:      number of characters for the short species name
+#     sep:     separator character
+
+shortens.names <- function(n1, n2, sep)
+
+
+```
+
+**PANGAEA.846449-tallus_disturbance_experiment**
+https://doi.pangaea.de/10.1594/PANGAEA.846449
+
+The effects of biotic disturbances, like seaweed whiplash, on the diversity of benthic communities are well documented for temperate coastal systems, yet missing for Arctic benthos. In Arctic soft-bottom habitats, kelp thalli occur either continuously (e.g. trapped by sediment) or sporadically (by drifting on the sediment) after detachment from rocky shores. To explore whether a kelp thallus can disturb the structure and diversity of a coastal Arctic soft-bottom assemblage, we continuously fixed a single thallus of the kelp Saccharina latissima to or sporadically (i.e. biweekly) moved it on the sediment and compared treatment effects to unmanipulated plots (= controls). On 6 September 2013 (i.e. after 73 days of manipulation), one sediment core was taken from each of the 30 plots (n = 10), from which the number of individuals of each of the 45 encountered animal species were recorded. Coded with a number (= block) and letter (= treatment, where capitol and minor letters indicate two experimental units from the same block; c = control, s = sporadic, f = fixed, i.e. continuous)
+
+Use this code to open the species data:
+
+tallus.disturbance <- read.csv("PANGAEA.846449-tallus_disturbance_experiment.csv",
+  sep=";",          # separated by semicolon
+  header = TRUE,    # reads column names from first row
+  row.names = 1)    # reads row names from first columns
+
+
+```{r tallus_disturbance_experiment}
+
+# loads packages
+
+library(tidyverse)
+library(vegan)  
+
+
+# opens file
+tallus.disturbance <- read.csv("PANGAEA.846449-tallus_disturbance_experiment.csv",
+  sep=";",          # separated by semicolon
+  header = TRUE,    # reads column names from first row
+  row.names = 1)    # reads row names from first columns
+
+# creates a semimatrix with the bray-curtis simmilarities among all possible
+# pairs of samples:
+tallus.d <- vegdist(tallus.disturbance, "bray") 
+
+# performs cluster analysis using the average distance between groups
+# of samples:
+
+tallus.cluster <- hclust(tallus.d, method="average")
+
+# plots the result of the analysis, which is a dendrogram of simmilarities
+# between samples:
+
+plot(tallus.cluster) 
+
+# Performs NMDS  to produce a 2D representation
+
+tallus.NMDS<-metaMDS(tallus.disturbance,k=2) 
+
+# stress is just too high, it requires transformation. We'll first do square root
+# transformation
+
+tallus.disturbance<-sqrt(tallus.disturbance)
+
+# Performs NMDS  to produce a 2D representation
+
+tallus.NMDS<-metaMDS(tallus.disturbance,k=2) 
+
+# stress is again too high. Performs NMDS again to produce a 3D representation
+
+tallus.NMDS<-metaMDS(tallus.disturbance,k=3) 
+
+# plots NMDS using function plot.NMDS, using as input the NMDS (nmd), the
+# cluster(clu), the number of branches (bra, an integer >1) and the species
+# dataframe (df)
+
+plot.NMDS (tallus.NMDS, tallus.cluster, 3, tallus.disturbance)
+
+
+shortens.names(3,3,"_")
+```
+
+  
