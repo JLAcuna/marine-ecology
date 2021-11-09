@@ -13,13 +13,8 @@ library(ggplot2)
 # "car" to estimate collinearity with vif()
 library(car)
 
-# "InformationValue" with Functions that Aid Accuracy Improvement
-# for Binary Classification Models. We use function optimalCutoff()
-# (https://cran.r-project.org/web/packages/InformationValue/vignettes/InformationValue.html)
-library(InformationValue)
 
-
-# "caret" contains functions to failitate the creation of predictive models.
+# "caret" contains functions to facilitate the creation of predictive models.
 # (https://topepo.github.io/caret/). We use function confusionMatrix()
 library(caret)
 
