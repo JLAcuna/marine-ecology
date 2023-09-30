@@ -1,6 +1,6 @@
 ##########################################################
 #    COMMUNITY ANALYSIS-IMBRSEA MARINE ECOLOGY COURSE    #
-#           By Jose Luis Acuna-01/11/2021                #
+#           By Jose Luis Acuna-09/10/2023                #
 ##########################################################
 
 ##########################################################
@@ -8,10 +8,26 @@
 ##########################################################
 
 # To run a single line of code you just place the cursor in that line and click
-# Ctrl+Enter. First we open the comma-separated ekofisk-species.csv file,
+# Ctrl+Enter. 
+
+# First we open the comma-separated ekofisk-species.csv file,
 # and create an R dataframe called ekofisk-species, with species as column names and
-# samples as row names:
+# samples as row names. The following code downloads the data from a cloud platform 
+# called GITHUB, where I have uploaded it. This is enough to follow the tutorials:
+# Note that header = TRUE indicates that the first line contains the names of the
+# variables (columns) while row.names=1 indicates that the first column contains the
+# sample names (cases, rows).
+
 ekofisk.species = read.csv("https://raw.githubusercontent.com/JLAcuna/marine-ecology/main/community_analysis/ekofisk-species.csv", header = TRUE, row.names = 1) 
+
+
+# However, when you want to analyze your data, you will need to upload them
+# from your computer (suposse your file is in "C:/my/file/directory/ekofisk-species.csv").
+# In that case, you will need to run the line below after setting your correct
+# file directory. I have outcommented the line because we are not using it now,
+# but you will need it when analyzing the practical dataset 
+
+# ekofisk.species <- read.csv("C:/my/file/directory/ekofisk-species.csv", header = TRUE, row.names = 1)
 
 
 # shows the dataframe:
@@ -22,8 +38,11 @@ View(ekofisk.species)
 # simmilarities between samples and other community analyses. A good manual
 # is available at
 # https://www.mooreecology.com/uploads/2/4/2/1/24213970/vegantutor.pdf
-# this step is not necessary if you have vegan already installed:
-install.packages("vegan") 
+# this step is not necessary if you have vegan already installed. This is 
+# why I have it commented out.
+
+# install.packages("vegan") 
+
 
 # loads vegan in the current session:
 library(vegan) 
@@ -99,7 +118,7 @@ plot(ekofisk.NMDS)
 
 # We first extract the NMDS scores (x and y coordinates in the 
 # NMDS plot) to a new dataframe called "NMDS.scores"
-NMDS.scores = as.data.frame(scores(ekofisk.NMDS))
+NMDS.scores = as.data.frame(scores(ekofisk.NMDS$species))
 
 
 # We now visualize NMDS.scores
@@ -118,22 +137,22 @@ View(five.branches)
 # plots the NMDS scores without symbols. To make symbols dissapear
 # we set their size to 0 using 'cex = 0'. Try using other symbol sizes
 # to see them
-plot(NMDS.scores$NMDS1, # this is the value of NMDS axis 1
-     NMDS.scores$NMDS2, # this is the value of NMDS axis 2
+plot(NMDS.scores$MDS1, # this is the value of NMDS axis 1
+     NMDS.scores$MDS2, # this is the value of NMDS axis 2
      cex = 0) # this sets symbol size to zero, so symbols dissapear
 
 
 # this adds the text labels to the plot. Because NMDS1 and NMDS2 are in
 # dataframe "NMDS.scores", you have to call them as "NMDS.scores$NMDS1"
 # and "NMDS.scores$NMDS2"
-text(NMDS.scores$NMDS1, NMDS.scores$NMDS2, # sets the x and y axes 
+text(NMDS.scores$MDS1, NMDS.scores$MDS2, # sets the x and y axes 
      labels=rownames(ekofisk.species), # uses ekofisk sample names
      cex=0.6, # sets text size of the labels
      col = five.branches)# sets the color according to cluster groups
 
 
 # this adds a legend with the group names and their corresponding colors
-legend(x=-1,y=0.45, # position of the legend
+legend(x=-1.9,y=1, # position of the legend
        c("group 1","group 2", "group 3", "group 4", "group 5"), # group names
        cex=.7, # character size
        col = c("red", "black", "green", "deepskyblue1", "cyan"), # symbol color
